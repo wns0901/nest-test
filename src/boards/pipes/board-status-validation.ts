@@ -1,4 +1,8 @@
-import { ArgumentMetadata, PipeTransform } from '@nestjs/common';
+import {
+  ArgumentMetadata,
+  BadRequestException,
+  PipeTransform,
+} from '@nestjs/common';
 import { BoardStatus } from '../boards.model';
 
 export class BoardStatusVaildationPipe implements PipeTransform {
@@ -8,6 +12,7 @@ export class BoardStatusVaildationPipe implements PipeTransform {
     value = value.toUpperCase();
 
     if (!this.isStatusValid(value)) {
+      throw new BadRequestException(`${value}는 status가 아님`);
     }
 
     return value;
