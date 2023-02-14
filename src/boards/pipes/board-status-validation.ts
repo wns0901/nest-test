@@ -3,10 +3,18 @@ import { BoardStatus } from '../boards.model';
 
 export class BoardStatusVaildationPipe implements PipeTransform {
   readonly StatusOptions = [BoardStatus.PRIVATE, BoardStatus.PUBLIC];
+
   transform(value: any, metadata: ArgumentMetadata) {
-    console.log('value', value);
-    console.log('metadata', metadata);
+    value = value.toUpperCase();
+
+    if (!this.isStatusValid(value)) {
+    }
 
     return value;
+  }
+
+  private isStatusValid(status: any) {
+    const index = this.StatusOptions.indexOf(status);
+    return index !== -1;
   }
 }
