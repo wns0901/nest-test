@@ -1,0 +1,34 @@
+import { Controller } from '@nestjs/common';
+import { Body, Post, Req, UseGuards } from '@nestjs/common/decorators';
+import { ValidationPipe } from '@nestjs/common/pipes';
+import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from './auth.service';
+import { AuthCredentialDto } from './dto/auth-credential.dto';
+import { GetUser } from './get-user.decorator';
+import { User } from './user.entity';
+
+@Controller('auth')
+export class AuthController {
+  constructor(private authService: AuthService) {}
+
+  @Post('/signup')
+  signUp(
+    @Body(ValidationPipe) authCredentialDto: AuthCredentialDto,
+  ): Promise<User> {
+    return this.authService.signUp(authCredentialDto);
+  }
+
+  @Post('/signin')
+  signin(
+    @Body(ValidationPipe) authCredentialDto: AuthCredentialDto,
+  ): Promise<{ accessToken: string }> {
+    return this.authService.signIn(authCredentialDto);
+  }
+
+  @Post('/test')
+  @UseGuards(AuthGuard())
+  test(@GetUser() user: User): User {
+    console.log('user', user);
+    return user;
+  }
+}
